@@ -173,6 +173,7 @@ func string2logLevel(s string) LogLevel {
 
 func Fatalf(format string, v ...interface{}) {
 	log.Printlf(logLevelFatal, format, v...)
+	panic(fmt.Errorf(format, v...))
 }
 
 func Errorf(format string, v ...interface{}) {
