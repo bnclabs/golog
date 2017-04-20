@@ -28,6 +28,7 @@ type Logger interface {
 	Verbosef(format string, v ...interface{})
 	Debugf(format string, v ...interface{})
 	Tracef(format string, v ...interface{})
+	Consolef(format string, v ...interface{})
 	Printlf(loglevel LogLevel, format string, v ...interface{})
 }
 
@@ -110,6 +111,10 @@ func (l *defaultLogger) Debugf(format string, v ...interface{}) {
 
 func (l *defaultLogger) Tracef(format string, v ...interface{}) {
 	l.Printlf(logLevelTrace, format, v...)
+}
+
+func (l *defaultLogger) Consolef(format string, v ...interface{}) {
+	fmt.Fprintf(l.output, "%s", fmt.Sprintf(format, v...))
 }
 
 func (l *defaultLogger) Printlf(level LogLevel, format string, v ...interface{}) {
@@ -198,4 +203,8 @@ func Debugf(format string, v ...interface{}) {
 
 func Tracef(format string, v ...interface{}) {
 	log.Printlf(logLevelTrace, format, v...)
+}
+
+func Consolef(format string, v ...interface{}) {
+	log.Consolef(format, v...)
 }
