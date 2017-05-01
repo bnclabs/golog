@@ -16,11 +16,15 @@ func init() {
 	SetLogger(nil, setts)
 }
 
+var log Logger // can be used used off-the-shelf.
+
 // Logger interface for gofast logging, applications can
 // supply a logger object implementing this interface or
 // gofast will fall back to the defaultLogger{}.
 type Logger interface {
 	SetLogLevel(string)
+	SetTimeFormat(string)
+	SetLogprefix(string)
 	Fatalf(format string, v ...interface{})
 	Errorf(format string, v ...interface{})
 	Warnf(format string, v ...interface{})
@@ -46,8 +50,6 @@ const (
 	logLevelTrace
 )
 
-var log Logger // object used by gofast component for logging.
-
 // SetLogger to integrate storage logging with application logging.
 // importing this package will initialize the logger with info level
 // logging to console.
@@ -68,7 +70,9 @@ func SetLogger(logger Logger, setts map[string]interface{}) Logger {
 			}
 		}
 	}
-	log = &defaultLogger{level: level, output: logfd}
+	log = &defaultLogger{output: logfd, level: level}
+	log.SetTimeFormat("2006-01-02T15:04:05.999Z-07:00")
+	log.SetLogprefix("[%v]")
 	return log
 }
 
@@ -77,12 +81,22 @@ func SetLogger(logger Logger, setts map[string]interface{}) Logger {
 // supply a Logger{} object when instantiating the
 // Transport.
 type defaultLogger struct {
-	level  LogLevel
-	output io.Writer
+	level      LogLevel
+	timeformat string
+	prefix     string
+	output     io.Writer
 }
 
 func (l *defaultLogger) SetLogLevel(level string) {
 	l.level = string2logLevel(level)
+}
+
+func (l *defaultLogger) SetTimeFormat(format string) {
+	l.timeformat = format
+}
+
+func (l *defaultLogger) SetLogprefix(prefix string) {
+	l.prefix = prefix
 }
 
 func (l *defaultLogger) Fatalf(format string, v ...interface{}) {
@@ -114,13 +128,21 @@ func (l *defaultLogger) Tracef(format string, v ...interface{}) {
 }
 
 func (l *defaultLogger) Consolef(format string, v ...interface{}) {
-	fmt.Fprintf(l.output, "%s", fmt.Sprintf(format, v...))
+	l.Printlf(logLevelTrace, format, v...)
 }
 
 func (l *defaultLogger) Printlf(level LogLevel, format string, v ...interface{}) {
 	if l.canlog(level) {
-		ts := time.Now().Format("2006-01-02T15:04:05.999Z-07:00")
-		fmt.Fprintf(l.output, ts+" ["+level.String()+"] "+format, v...)
+		prefix := ""
+		if l.timeformat != "" {
+			prefix = time.Now().Format(l.timeformat) + " "
+		}
+		if lstr := level.String(); lstr != "" {
+			prefix += fmt.Sprintf(l.prefix, level.String()) + " "
+		}
+		newv := []interface{}{prefix}
+		newv = append(newv, v...)
+		fmt.Fprintf(l.output, "%v"+format, newv...)
 	}
 }
 
