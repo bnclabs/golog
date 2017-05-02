@@ -8,10 +8,14 @@ import "fmt"
 import "time"
 import "strings"
 
+var timeformat, prefix = "2006-01-02T15:04:05.999Z-07:00", "[%v]"
+
 func init() {
 	setts := map[string]interface{}{
-		"log.level": "info",
-		"log.file":  "",
+		"log.level":      "info",
+		"log.file":       "",
+		"log.timeformat": timeformat,
+		"log.prefix":     prefix,
 	}
 	SetLogger(nil, setts)
 }
@@ -70,9 +74,20 @@ func SetLogger(logger Logger, setts map[string]interface{}) Logger {
 			}
 		}
 	}
-	log = &defaultLogger{output: logfd, level: level}
-	log.SetTimeFormat("2006-01-02T15:04:05.999Z-07:00")
-	log.SetLogprefix("[%v]")
+	deflog := &defaultLogger{
+		output: logfd, level: level, timeformat: timeformat, prefix: prefix,
+	}
+	if timeformat, ok := setts["log.timeformat"]; ok {
+		if format, ok := timeformat.(string); ok {
+			deflog.timeformat = format
+		}
+	}
+	if prefix, ok := setts["log.prefix"]; ok {
+		if pref, ok := prefix.(string); ok {
+			deflog.prefix = pref
+		}
+	}
+	log = deflog
 	return log
 }
 
