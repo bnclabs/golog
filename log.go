@@ -22,13 +22,16 @@ func init() {
 
 var log Logger // can be used used off-the-shelf.
 
-// Logger interface for gofast logging, applications can
-// supply a logger object implementing this interface or
-// gofast will fall back to the defaultLogger{}.
+// Logger interface for application logging, applications can
+// supply a logger object implementing this interface, otherwise,
+// defaultLogger{} will be used.
 type Logger interface {
+	// SetLogLevel application's global log level.
 	SetLogLevel(string)
+	// SetTimeFormat to use as prefix for all log messages.
 	SetTimeFormat(string)
-	SetLogprefix(string)
+	// SetLogprefix including the log level.
+	SetLogprefix(interface{})
 	Fatalf(format string, v ...interface{})
 	Errorf(format string, v ...interface{})
 	Warnf(format string, v ...interface{})
@@ -36,11 +39,10 @@ type Logger interface {
 	Verbosef(format string, v ...interface{})
 	Debugf(format string, v ...interface{})
 	Tracef(format string, v ...interface{})
-	Consolef(format string, v ...interface{})
 	Printlf(loglevel LogLevel, format string, v ...interface{})
 }
 
-// LogLevel defines storage log level.
+// LogLevel defines application log level.
 type LogLevel int
 
 const (
@@ -85,6 +87,10 @@ func SetLogger(logger Logger, setts map[string]interface{}) Logger {
 	if prefix, ok := setts["log.prefix"]; ok {
 		if pref, ok := prefix.(string); ok {
 			deflog.prefix = pref
+		} else if _, ok = prefix.(bool); ok {
+			deflog.prefix = ""
+		} else {
+			panic("level-prefix can either be string format, or bool")
 		}
 	}
 	log = deflog
@@ -110,8 +116,14 @@ func (l *defaultLogger) SetTimeFormat(format string) {
 	l.timeformat = format
 }
 
-func (l *defaultLogger) SetLogprefix(prefix string) {
-	l.prefix = prefix
+func (l *defaultLogger) SetLogprefix(prefix interface{}) {
+	if val, ok := prefix.(string); ok {
+		l.prefix = val
+	} else if _, ok = prefix.(bool); ok {
+		l.prefix = ""
+	} else {
+		panic("level-prefix can either be string format, or bool")
+	}
 }
 
 func (l *defaultLogger) Fatalf(format string, v ...interface{}) {
@@ -142,17 +154,13 @@ func (l *defaultLogger) Tracef(format string, v ...interface{}) {
 	l.Printlf(logLevelTrace, format, v...)
 }
 
-func (l *defaultLogger) Consolef(format string, v ...interface{}) {
-	l.Printlf(logLevelTrace, format, v...)
-}
-
 func (l *defaultLogger) Printlf(level LogLevel, format string, v ...interface{}) {
 	if l.canlog(level) {
 		prefix := ""
 		if l.timeformat != "" {
 			prefix = time.Now().Format(l.timeformat) + " "
 		}
-		if lstr := level.String(); lstr != "" {
+		if lstr := level.String(); lstr != "" && l.prefix != "" {
 			prefix += fmt.Sprintf(l.prefix, level.String()) + " "
 		}
 		newv := []interface{}{prefix}
@@ -243,5 +251,5 @@ func Tracef(format string, v ...interface{}) {
 }
 
 func Consolef(format string, v ...interface{}) {
-	log.Consolef(format, v...)
+	fmt.Fprintf(os.Stdout, format, v...)
 }
