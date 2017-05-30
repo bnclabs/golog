@@ -245,7 +245,11 @@ func (l *defaultLogger) Printlf(level LogLevel, format string, v ...interface{})
 		}
 		newv := []interface{}{prefix}
 		newv = append(newv, v...)
-		fmt.Fprintf(l.output, l.colors[level].Sprintf("%v"+format, newv...))
+		if color, ok := l.colors[level]; ok && color != nil {
+			fmt.Fprintf(l.output, color.Sprintf("%v"+format, newv...))
+		} else {
+			fmt.Fprintf(l.output, "%v"+format, newv...)
+		}
 	}
 }
 
