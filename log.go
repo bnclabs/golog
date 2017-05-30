@@ -8,14 +8,24 @@ import "fmt"
 import "time"
 import "strings"
 
+import "github.com/prataprc/color"
+
 var timeformat, prefix = "2006-01-02T15:04:05.999Z-07:00", "[%v]"
 
 func init() {
 	setts := map[string]interface{}{
-		"log.level":      "info",
-		"log.file":       "",
-		"log.timeformat": timeformat,
-		"log.prefix":     prefix,
+		"log.level":        "info",
+		"log.file":         "",
+		"log.timeformat":   timeformat,
+		"log.prefix":       prefix,
+		"log.colorignore":  "",
+		"log.colorfatal":   "",
+		"log.colorerror":   "",
+		"log.colorwarn":    "",
+		"log.colorinfo":    "",
+		"log.colorverbose": "",
+		"log.colordebug":   "",
+		"log.colortrace":   "",
 	}
 	SetLogger(nil, setts)
 }
@@ -39,6 +49,14 @@ type Logger interface {
 
 	// SetLogprefix including the log level.
 	SetLogprefix(interface{})
+
+	// SetLogcolor sets coloring attributes for specified log level, can be
+	// a list of following attributes: "bold", "underline", "blinkslow",
+	// "blinkrapid", "crossedout",
+	// "red", "green", "yellow", "blue", "magenta", "cyan", "white"
+	// "hired", "higreen", "hiyellow", "hiblue", "himagenta", "hicyan",
+	// "hiwhite"
+	SetLogcolor(level string, attrs []string)
 
 	// Fatalf similar to Printf, will be logged only when log level is set as
 	// "fatal" or above.
@@ -111,6 +129,7 @@ func SetLogger(logger Logger, setts map[string]interface{}) Logger {
 	}
 	deflog := &defaultLogger{
 		output: logfd, timeformat: timeformat, prefix: prefix,
+		colors: make(map[LogLevel]*color.Color),
 	}
 
 	level, ok := setts["log.level"]
@@ -126,6 +145,24 @@ func SetLogger(logger Logger, setts map[string]interface{}) Logger {
 		deflog.SetLogprefix(prefix)
 	}
 
+	// colors
+	params := []string{"log.colorignore", "log.colorfatal", "log.colorerror",
+		"log.colorwarn", "log.colorinfo", "log.colorverbose", "log.colordebug",
+		"log.colortrace"}
+	for _, param := range params {
+		level := param[9:]
+		if val, ok := setts[param]; ok {
+			if v1, ok := val.(string); ok {
+				deflog.SetLogcolor(level, parsecsv(v1))
+			} else if v2, ok := val.([]string); ok {
+				deflog.SetLogcolor(level, v2)
+			} else {
+				fmsg := "invalid type: color parameter %q has %T"
+				panic(fmt.Errorf(fmsg, param, val))
+			}
+		}
+	}
+
 	log = deflog
 	return log
 }
@@ -139,6 +176,7 @@ type defaultLogger struct {
 	timeformat string
 	prefix     string
 	output     io.Writer
+	colors     map[LogLevel]*color.Color
 }
 
 func (l *defaultLogger) SetLogLevel(level string) {
@@ -157,6 +195,15 @@ func (l *defaultLogger) SetLogprefix(prefix interface{}) {
 	} else {
 		panic("level-prefix can either be string format, or bool")
 	}
+}
+
+func (l *defaultLogger) SetLogcolor(level string, attrs []string) {
+	ll := string2logLevel(level)
+	attributes := []color.Attribute{}
+	for _, attr := range attrs {
+		attributes = append(attributes, string2clrattr(attr))
+	}
+	l.colors[ll] = color.New(attributes...)
 }
 
 func (l *defaultLogger) Fatalf(format string, v ...interface{}) {
@@ -198,7 +245,7 @@ func (l *defaultLogger) Printlf(level LogLevel, format string, v ...interface{})
 		}
 		newv := []interface{}{prefix}
 		newv = append(newv, v...)
-		fmt.Fprintf(l.output, "%v"+format, newv...)
+		fmt.Fprintf(l.output, l.colors[level].Sprintf("%v"+format, newv...))
 	}
 }
 
@@ -251,7 +298,52 @@ func string2logLevel(s string) LogLevel {
 	case "trace":
 		return logLevelTrace
 	}
-	panic("unexpected log level") // should never reach here
+	panic(fmt.Errorf("unexpected log level: %q", s)) // never reach here
+}
+
+func string2clrattr(s string) color.Attribute {
+	s = strings.ToLower(s)
+	switch s {
+	case "bold":
+		return color.Bold
+	case "underline":
+		return color.Underline
+	case "blinkslow":
+		return color.BlinkSlow
+	case "blinkrapid":
+		return color.BlinkRapid
+	case "crossedout":
+		return color.CrossedOut
+	case "red":
+		return color.FgRed
+	case "green":
+		return color.FgGreen
+	case "yellow":
+		return color.FgYellow
+	case "blue":
+		return color.FgBlue
+	case "magenta":
+		return color.FgMagenta
+	case "cyan":
+		return color.FgCyan
+	case "white":
+		return color.FgWhite
+	case "hired":
+		return color.FgHiRed
+	case "higreen":
+		return color.FgHiGreen
+	case "hiyellow":
+		return color.FgHiYellow
+	case "hiblue":
+		return color.FgHiBlue
+	case "himagenta":
+		return color.FgHiMagenta
+	case "hicyan":
+		return color.FgHiCyan
+	case "hiwhite":
+		return color.FgHiWhite
+	}
+	panic(fmt.Errorf("unexpected color attribute %q", s)) // never reach here
 }
 
 func Fatalf(format string, v ...interface{}) {
@@ -285,4 +377,20 @@ func Tracef(format string, v ...interface{}) {
 
 func Consolef(format string, v ...interface{}) {
 	fmt.Fprintf(os.Stdout, format, v...)
+}
+
+func parsecsv(input string) []string {
+	if input == "" {
+		return nil
+	}
+	ss := strings.Split(input, ",")
+	outs := make([]string, 0)
+	for _, s := range ss {
+		s = strings.Trim(s, " \t\r\n")
+		if s == "" {
+			continue
+		}
+		outs = append(outs, s)
+	}
+	return outs
 }
