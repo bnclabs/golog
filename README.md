@@ -86,3 +86,13 @@ Panic cases
 Typically all the above panic cases needs to be fixed during development, and
 should never occur during production. If panics become un-avoidable please use
 [panic/recover](https://blog.golang.org/defer-panic-and-recover).
+
+How to contribute
+-----------------
+
+* Pick an issue, or create an new issue. Provide adequate documentation for
+the issue.
+* Assign the issue or get it assigned.
+* Work on the code, once finished, raise a pull request.
+* Golog is written in [golang](https://golang.org/), hence expected to follow the
+global guidelines for writing go programs.
