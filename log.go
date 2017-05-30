@@ -22,23 +22,51 @@ func init() {
 
 var log Logger // can be used used off-the-shelf.
 
+// DefaultLogLevel to use if log.level option is missing.
+var DefaultLogLevel = "info"
+
 // Logger interface for application logging, applications can
 // supply a logger object implementing this interface, otherwise,
 // defaultLogger{} will be used.
 type Logger interface {
 	// SetLogLevel application's global log level.
 	SetLogLevel(string)
+
 	// SetTimeFormat to use as prefix for all log messages.
 	SetTimeFormat(string)
+
 	// SetLogprefix including the log level.
 	SetLogprefix(interface{})
+
+	// Fatalf similar to Printf, will be logged only when log level is set as
+	// "fatal" or above.
 	Fatalf(format string, v ...interface{})
+
+	// Errorf similar to Printf, will be logged only when log level is set as
+	// "error" or above.
 	Errorf(format string, v ...interface{})
+
+	// Warnf similar to Printf, will be logged only when log level is set as
+	// "warn" or above.
 	Warnf(format string, v ...interface{})
+
+	// Infof similar to Printf, will be logged only when log level is set as
+	// "info" or above.
 	Infof(format string, v ...interface{})
+
+	// Verbosef similar to Printf, will be logged only when log level is set as
+	// "verbose" or above.
 	Verbosef(format string, v ...interface{})
+
+	// Debugf similar to Printf, will be logged only when log level is set as
+	// "debug" or above.
 	Debugf(format string, v ...interface{})
+
+	// Tracef similar to Printf, will be logged only when log level is set as
+	// "trace" or above.
 	Tracef(format string, v ...interface{})
+
+	// Printlf reserved for future extension.
 	Printlf(loglevel LogLevel, format string, v ...interface{})
 }
 
@@ -66,33 +94,36 @@ func SetLogger(logger Logger, setts map[string]interface{}) Logger {
 	}
 
 	var err error
-	level := string2logLevel(setts["log.level"].(string))
+
 	logfd := os.Stdout
-	if logfile := setts["log.file"].(string); logfile != "" {
-		logfd, err = os.OpenFile(logfile, os.O_RDWR|os.O_APPEND, 0660)
-		if err != nil {
-			if logfd, err = os.Create(logfile); err != nil {
-				panic(err)
+	if logfile, ok := setts["log.file"]; ok {
+		filename := logfile.(string)
+		if filename != "" {
+			logfd, err = os.OpenFile(filename, os.O_RDWR|os.O_APPEND, 0660)
+			if err != nil {
+				if logfd, err = os.Create(filename); err != nil {
+					panic(err)
+				}
 			}
 		}
 	}
 	deflog := &defaultLogger{
-		output: logfd, level: level, timeformat: timeformat, prefix: prefix,
+		output: logfd, timeformat: timeformat, prefix: prefix,
 	}
+
+	level, ok := setts["log.level"]
+	if ok == false {
+		level = "info"
+	}
+	deflog.SetLogLevel(level.(string))
+
 	if timeformat, ok := setts["log.timeformat"]; ok {
-		if format, ok := timeformat.(string); ok {
-			deflog.timeformat = format
-		}
+		deflog.timeformat = timeformat.(string)
 	}
 	if prefix, ok := setts["log.prefix"]; ok {
-		if pref, ok := prefix.(string); ok {
-			deflog.prefix = pref
-		} else if _, ok = prefix.(bool); ok {
-			deflog.prefix = ""
-		} else {
-			panic("level-prefix can either be string format, or bool")
-		}
+		deflog.SetLogprefix(prefix)
 	}
+
 	log = deflog
 	return log
 }
