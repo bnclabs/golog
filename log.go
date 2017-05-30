@@ -29,7 +29,9 @@ var DefaultLogLevel = "info"
 // supply a logger object implementing this interface, otherwise,
 // defaultLogger{} will be used.
 type Logger interface {
-	// SetLogLevel application's global log level.
+	// SetLogLevel application's global log level, can be one of the
+	// following: "ignore", "fatal", "error", "warn", "info", "verbose",
+	// "debug", "trace"
 	SetLogLevel(string)
 
 	// SetTimeFormat to use as prefix for all log messages.
