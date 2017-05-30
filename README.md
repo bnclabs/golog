@@ -12,7 +12,7 @@ Basic logging with some batteries:
 
 Packages can import log and use its methods
 
-.. code-block:: go
+```go
 
     import github.com/prataprc/golog
 
@@ -24,6 +24,7 @@ Packages can import log and use its methods
         ..
         log.Debugf(...)
     }
+```
 
 note here that *log* is not an object name, it resolves to the imported *log*
 package that has exported methods *Fatalf()* *Warnf()* etc ... For more
@@ -33,7 +34,7 @@ By default, importing the package will initialize the logger to
 default-logger that shall log to standard output. To use custom logger
 use the following initializer function in your package or application:
 
-.. code-block:: go
+```go
 
     import github.com/prataprc/golog
 
@@ -46,6 +47,7 @@ use the following initializer function in your package or application:
         }
         SetLogger(mylogger, setts)
     }
+```
 
 *mylogger* should implement the *log.Logger* interface{}.
 
