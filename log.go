@@ -179,14 +179,17 @@ type defaultLogger struct {
 	colors     map[LogLevel]*color.Color
 }
 
+// SetLogLevel for defaultLogger.
 func (l *defaultLogger) SetLogLevel(level string) {
 	l.level = string2logLevel(level)
 }
 
+// SetTimeFormat for defaultLogger.
 func (l *defaultLogger) SetTimeFormat(format string) {
 	l.timeformat = format
 }
 
+// SetLogprefix for defaultLogger
 func (l *defaultLogger) SetLogprefix(prefix interface{}) {
 	if val, ok := prefix.(string); ok {
 		l.prefix = val
@@ -197,6 +200,7 @@ func (l *defaultLogger) SetLogprefix(prefix interface{}) {
 	}
 }
 
+// SetLogcolor for defaultLogger
 func (l *defaultLogger) SetLogcolor(level string, attrs []string) {
 	ll := string2logLevel(level)
 	attributes := []color.Attribute{}
@@ -206,34 +210,42 @@ func (l *defaultLogger) SetLogcolor(level string, attrs []string) {
 	l.colors[ll] = color.New(attributes...)
 }
 
+// Fatalf for defaultLogger
 func (l *defaultLogger) Fatalf(format string, v ...interface{}) {
 	l.Printlf(logLevelFatal, format, v...)
 }
 
+// Errorf for defaultLogger
 func (l *defaultLogger) Errorf(format string, v ...interface{}) {
 	l.Printlf(logLevelError, format, v...)
 }
 
+// Warnf for defaultLogger
 func (l *defaultLogger) Warnf(format string, v ...interface{}) {
 	l.Printlf(logLevelWarn, format, v...)
 }
 
+// Infof for defaultLogger
 func (l *defaultLogger) Infof(format string, v ...interface{}) {
 	l.Printlf(logLevelInfo, format, v...)
 }
 
+// Verbosef for defaultLogger
 func (l *defaultLogger) Verbosef(format string, v ...interface{}) {
 	l.Printlf(logLevelVerbose, format, v...)
 }
 
+// Debugf for defaultLogger
 func (l *defaultLogger) Debugf(format string, v ...interface{}) {
 	l.Printlf(logLevelDebug, format, v...)
 }
 
+// Tracef for defaultLogger
 func (l *defaultLogger) Tracef(format string, v ...interface{}) {
 	l.Printlf(logLevelTrace, format, v...)
 }
 
+// Printlf for defaultLogger
 func (l *defaultLogger) Printlf(level LogLevel, format string, v ...interface{}) {
 	if l.canlog(level) {
 		prefix := ""
@@ -350,35 +362,50 @@ func string2clrattr(s string) color.Attribute {
 	panic(fmt.Errorf("unexpected color attribute %q", s)) // never reach here
 }
 
+// Fatalf similar to Printf, will be logged only when log level is set as
+// "fatal" or above.
 func Fatalf(format string, v ...interface{}) {
 	log.Printlf(logLevelFatal, format, v...)
 	panic(fmt.Errorf(format, v...))
 }
 
+// Errorf similar to Printf, will be logged only when log level is set as
+// "error" or above.
 func Errorf(format string, v ...interface{}) {
 	log.Printlf(logLevelError, format, v...)
 }
 
+// Warnf similar to Printf, will be logged only when log level is set as
+// "warn" or above.
 func Warnf(format string, v ...interface{}) {
 	log.Printlf(logLevelWarn, format, v...)
 }
 
+// Infof similar to Printf, will be logged only when log level is set as
+// "info" or above.
 func Infof(format string, v ...interface{}) {
 	log.Printlf(logLevelInfo, format, v...)
 }
 
+// Verbosef similar to Printf, will be logged only when log level is set as
+// "verbose" or above.
 func Verbosef(format string, v ...interface{}) {
 	log.Printlf(logLevelVerbose, format, v...)
 }
 
+// Debugf similar to Printf, will be logged only when log level is set as
+// "debug" or above.
 func Debugf(format string, v ...interface{}) {
 	log.Printlf(logLevelDebug, format, v...)
 }
 
+// Tracef similar to Printf, will be logged only when log level is set as
+// "trace" or above.
 func Tracef(format string, v ...interface{}) {
 	log.Printlf(logLevelTrace, format, v...)
 }
 
+// Consolef similar to Printf, will log to os.Stdout.
 func Consolef(format string, v ...interface{}) {
 	fmt.Fprintf(os.Stdout, format, v...)
 }
