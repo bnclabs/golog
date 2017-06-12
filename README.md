@@ -1,9 +1,9 @@
+Basic logging with batteries
+----------------------------
+
 [![Build Status](https://travis-ci.org/prataprc/golog.png)](https://travis-ci.org/prataprc/golog)
 [![Coverage Status](https://coveralls.io/repos/prataprc/golog/badge.png?branch=master&service=github)](https://coveralls.io/github/prataprc/golog?branch=master)
 [![GoDoc](https://godoc.org/github.com/prataprc/golog?status.png)](https://godoc.org/github.com/prataprc/golog)
-
-Basic logging with batteries
-----------------------------
 
 * APIs to prefix log level in log messages.
 * Gobal option to redirect logs to a file.
