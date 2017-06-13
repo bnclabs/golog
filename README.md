@@ -5,9 +5,10 @@ Basic logging with batteries
 [![Coverage Status](https://coveralls.io/repos/prataprc/golog/badge.png?branch=master&service=github)](https://coveralls.io/github/prataprc/golog?branch=master)
 [![GoDoc](https://godoc.org/github.com/prataprc/golog?status.png)](https://godoc.org/github.com/prataprc/golog)
 
-* APIs to prefix log level in log messages.
-* Gobal option to redirect logs to a file.
+* APIs to prefix log-level in log messages.
+* Global option to redirect logs to a file.
 * Include/Exclude/Format log time.
+* Colorize log messages for different levels.
 * Console logging.
 
 Packages can import log and use its methods
@@ -26,9 +27,9 @@ Packages can import log and use its methods
     }
 ```
 
-note here that *log* is not an object name, it resolves to the imported *log*
+Note here that *log* is not an object name, it resolves to the imported *log*
 package that has exported methods *Fatalf()* *Warnf()* etc ... For more
-information please read the godoc-umentation for *log* package.
+information please read the go-documentation for *log* package.
 
 By default, importing the package will initialize the logger to
 default-logger that shall log to standard output. To use custom logger
@@ -84,7 +85,7 @@ Panic cases
   * if ``log.prefix`` is neither string, nor bool.
 
 Typically all the above panic cases needs to be fixed during development, and
-should never occur during production. If panics become un-avoidable please use
+should never occur during production. If panics become unavoidable please use
 [panic/recover](https://blog.golang.org/defer-panic-and-recover).
 
 How to contribute
