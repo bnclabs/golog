@@ -87,8 +87,8 @@ Settings
 * **log.level**, filter all messages logged at level greater than the
 configured value. Can be one of the following names -
 ignore, fatal, error, warn, info, verbose, debug, trace
-* **log.flag**, comma separated value of log.Flags, described further
-down.
+* **log.flag**, comma separated value of log.Flags,
+eg: ``Ldate,Ltime,Llongfile``, described further down.
 * **log.file**, if not empty string, all log messages are appended to
 configured file.
 * **log.timeformat**, format of time string prefixed to log message,
