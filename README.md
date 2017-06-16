@@ -87,6 +87,8 @@ Settings
 * **log.level**, filter all messages logged at level greater than the
 configured value. Can be one of the following names -
 ignore, fatal, error, warn, info, verbose, debug, trace
+* **log.flag**, comma separated value of log.Flags, described further
+down.
 * **log.file**, if not empty string, all log messages are appended to
 configured file.
 * **log.timeformat**, format of time string prefixed to log message,
@@ -103,7 +105,30 @@ levels.
 only log-level can be specified as ``ignore``, no corresponding API
 is supported.
 
-Default log level is ``Info``.
+**log.Flags**
+
+```go
+const (
+    // Bits or'ed together to control what's printed.
+    // There is no control over the order they appear (the order listed
+    // here) or the format they present (as described in the comments).
+    // The prefix is followed by a colon only when Llongfile or Lshortfile
+    // is specified.
+    // For example, flags Ldate | Ltime (or LstdFlags) produce,
+    //  2009/01/23 01:23:23 message
+    // while flags Ldate | Ltime | Lmicroseconds | Llongfile produce,
+    //  2009/01/23 01:23:23.123123 /a/b/c/d.go:23: message
+    Ldate         = 1 << iota     // the date in the local time zone: 2009/01/23
+    Ltime                         // the time in the local time zone: 01:23:23
+    Lmicroseconds                 // microsecond resolution: 01:23:23.123123.  assumes Ltime.
+    Llongfile                     // full file name and line number: /a/b/c/d.go:23
+    Lshortfile                    // final file name element and line number: d.go:23. overrides Llongfile
+    LUTC                          // if Ldate or Ltime is set, use UTC rather than the local time zone
+    LstdFlags     = Ldate | Ltime // initial values for the standard logger
+)
+```
+
+Default **log.level** is ``Info``.
 
 Panic cases
 -----------
