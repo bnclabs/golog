@@ -52,6 +52,21 @@ use the following initializer function in your package or application:
 
 *mylogger* should implement the *log.Logger* interface{}.
 
+**Order of log levels**
+
+```golang
+const (
+	logLevelIgnore LogLevel = iota + 1
+	logLevelFatal
+	logLevelError
+	logLevelWarn
+	logLevelInfo
+	logLevelVerbose
+	logLevelDebug
+	logLevelTrace
+)
+```
+
 Console Logging
 ---------------
 
@@ -65,6 +80,28 @@ messages with user via console. In such cases use the ``Consolef`` API.
 
 ``Consolef`` does not print the log time, log level and always outputs to
 stdout.
+
+Settings
+--------
+
+* **log.level**, filter all messages logged at level greater than the
+configured value. Can be one of the following names -
+ignore, fatal, error, warn, info, verbose, debug, trace
+* **log.file**, if not empty string, all log messages are appended to
+configured file.
+* **log.timeformat**, format of time string prefixed to log message,
+should confirm to ``time.Now().Format()``.
+* **log.prefix**, ``fmt.Sprintf`` format string for log level, by
+default ``[<leve>]`` format is used.
+* **log.colorfatal**, comma separated value of attribute names -
+bold, underline, blinkslow, blinkrapid, crossedout, red, green,
+yellow, blue, magenta, cyan, white, hired, higreen, hiyellow, hiblue,
+himagenta, hicyan, hiwhite. Attribute-settings available for all log
+levels.
+
+**Ignore** ignore level can be used to ignore all log messages. Note that
+inly log-level can be specified as ``ignore``, no corresponding API
+is supported.
 
 Panic cases
 -----------
