@@ -100,7 +100,7 @@ himagenta, hicyan, hiwhite. Attribute-settings available for all log
 levels.
 
 **Ignore** ignore level can be used to ignore all log messages. Note that
-inly log-level can be specified as ``ignore``, no corresponding API
+only log-level can be specified as ``ignore``, no corresponding API
 is supported.
 
 Panic cases
