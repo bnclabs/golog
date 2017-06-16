@@ -2,11 +2,11 @@
 
 package log
 
-import "io"
 import "os"
 import "fmt"
 import "time"
 import "strings"
+import stdlog "log"
 
 import "github.com/prataprc/color"
 
@@ -15,13 +15,14 @@ var timeformat, prefix = "2006-01-02T15:04:05.999Z-07:00", "[%v]"
 func init() {
 	setts := map[string]interface{}{
 		"log.level":        "info",
+		"log.flags":        "",
 		"log.file":         "",
 		"log.timeformat":   timeformat,
 		"log.prefix":       prefix,
 		"log.colorignore":  "",
-		"log.colorfatal":   "",
-		"log.colorerror":   "",
-		"log.colorwarn":    "",
+		"log.colorfatal":   "red",
+		"log.colorerror":   "hired",
+		"log.colorwarn":    "yellow",
 		"log.colorinfo":    "",
 		"log.colorverbose": "",
 		"log.colordebug":   "",
@@ -43,6 +44,10 @@ type Logger interface {
 	// following: "ignore", "fatal", "error", "warn", "info", "verbose",
 	// "debug", "trace"
 	SetLogLevel(string)
+
+	// SetLogFlags format of log prefix, following golang's log:Flag()
+	// specification
+	SetLogFlags(flags int)
 
 	// SetTimeFormat to use as prefix for all log messages.
 	SetTimeFormat(string)
@@ -127,8 +132,10 @@ func SetLogger(logger Logger, setts map[string]interface{}) Logger {
 			}
 		}
 	}
+	stdlog.SetOutput(logfd)
+
 	deflog := &defaultLogger{
-		output: logfd, timeformat: timeformat, prefix: prefix,
+		timeformat: timeformat, prefix: prefix,
 		colors: make(map[LogLevel]*color.Color),
 	}
 
@@ -138,9 +145,22 @@ func SetLogger(logger Logger, setts map[string]interface{}) Logger {
 	}
 	deflog.SetLogLevel(level.(string))
 
-	if timeformat, ok := setts["log.timeformat"]; ok {
-		deflog.timeformat = timeformat.(string)
+	logflags := int(0)
+	if flags, ok := setts["log.flags"]; ok {
+		for _, flag := range parsecsv(flags.(string)) {
+			logflags |= string2flag(flag)
+		}
+		deflog.SetLogFlags(logflags)
 	}
+
+	if logflags == 0 {
+		if timeformat, ok := setts["log.timeformat"]; ok {
+			deflog.SetTimeFormat(timeformat.(string))
+		}
+	} else { // if flags are available disable timeformat.
+		deflog.SetTimeFormat("")
+	}
+
 	if prefix, ok := setts["log.prefix"]; ok {
 		deflog.SetLogprefix(prefix)
 	}
@@ -175,13 +195,17 @@ type defaultLogger struct {
 	level      LogLevel
 	timeformat string
 	prefix     string
-	output     io.Writer
 	colors     map[LogLevel]*color.Color
 }
 
 // SetLogLevel for defaultLogger.
 func (l *defaultLogger) SetLogLevel(level string) {
 	l.level = string2logLevel(level)
+}
+
+// SetLogFlags for defaultLogger.
+func (l *defaultLogger) SetLogFlags(flags int) {
+	stdlog.SetFlags(flags)
 }
 
 // SetTimeFormat for defaultLogger.
@@ -258,9 +282,9 @@ func (l *defaultLogger) Printlf(level LogLevel, format string, v ...interface{})
 		newv := []interface{}{prefix}
 		newv = append(newv, v...)
 		if color, ok := l.colors[level]; ok && color != nil {
-			fmt.Fprintf(l.output, color.Sprintf("%v"+format, newv...))
+			stdlog.Output(2, color.Sprintf("%v"+format, newv...))
 		} else {
-			fmt.Fprintf(l.output, "%v"+format, newv...)
+			stdlog.Output(2, fmt.Sprintf("%v"+format, newv...))
 		}
 	}
 }
@@ -358,6 +382,27 @@ func string2clrattr(s string) color.Attribute {
 		return color.FgHiCyan
 	case "hiwhite":
 		return color.FgHiWhite
+	}
+	panic(fmt.Errorf("unexpected color attribute %q", s)) // never reach here
+}
+
+func string2flag(s string) int {
+	s = strings.ToLower(s)
+	switch s {
+	case "ldate":
+		return stdlog.Ldate
+	case "ltime":
+		return stdlog.Ltime
+	case "lmicroseconds":
+		return stdlog.Lmicroseconds
+	case "llongfile":
+		return stdlog.Llongfile
+	case "lshortfile":
+		return stdlog.Lshortfile
+	case "lutc":
+		return stdlog.LUTC
+	case "lstdflags":
+		return stdlog.LstdFlags
 	}
 	panic(fmt.Errorf("unexpected color attribute %q", s)) // never reach here
 }

@@ -103,6 +103,8 @@ levels.
 only log-level can be specified as ``ignore``, no corresponding API
 is supported.
 
+Default log level is ``Info``.
+
 Panic cases
 -----------
 
