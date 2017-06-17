@@ -105,7 +105,7 @@ levels.
 only log-level can be specified as ``ignore``, no corresponding API
 is supported.
 
-**log.Flags**
+**log.flags**
 
 ```go
 const (
