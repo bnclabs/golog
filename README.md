@@ -4,6 +4,7 @@ Basic logging with batteries
 [![Build Status](https://travis-ci.org/prataprc/golog.png)](https://travis-ci.org/prataprc/golog)
 [![Coverage Status](https://coveralls.io/repos/prataprc/golog/badge.png?branch=master&service=github)](https://coveralls.io/github/prataprc/golog?branch=master)
 [![GoDoc](https://godoc.org/github.com/prataprc/golog?status.png)](https://godoc.org/github.com/prataprc/golog)
+[![GitPitch](https://gitpitch.com/assets/badge.svg)](https://gitpitch.com/prataprc/golog/master?grs=github&t=white)
 
 * APIs to prefix log-level in log messages.
 * Global option to redirect logs to a file.
