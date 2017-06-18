@@ -1,5 +1,5 @@
-theme : white
+theme : beige
 highlight : molokai
 slide-number : true
-footnote : http://github.com/prataprc/golog
 vertical-center : false
+theme-override : assets/PITCHME.css
