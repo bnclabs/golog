@@ -62,8 +62,7 @@ than Info level shall be filtered out.
 
 - **Ignore**, messages cannot be logged at Ignore level, so all messages
 logged using golog will be filtered out.
-- **Fatal**, will panic after logging the message, messages logged at level
-Error and below will be filtered out.
+- **Fatal**, will panic after logging the message.
 - **Error**, means there was a critical error, needs supervisor attention.
 - **Warn**, means there was an unexpected situation, but system can recover.
 - **Info**, to communicate with user about system progress and its sanity.
