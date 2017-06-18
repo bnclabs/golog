@@ -1,1 +1,5 @@
 theme : white
+highlight : molokai
+slide-number : true
+footnote : http://github.com/prataprc/golog
+vertical-center : false
