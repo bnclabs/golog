@@ -37,8 +37,8 @@ What you can already do with golang's log package ?
 Golog: Basic logging with batteries
 ===================================
 
-I use golog only if I need more that what __log__ pkg already provides.
-And I figured I wanted the following:
+I use golog only if I need more than what __log__ pkg already provides.
+And more than once I needed the following:
 
 - **Log levels**, used for filtering messages and prefixing the level
 information with every message.
