@@ -159,8 +159,8 @@ Can use vim's reg-ex pattern as Filter's argument.
 
 ---
 
-Tip: syntax highlighting of log files
-=====================================
+Tip: syntax highlighting for log files
+======================================
 
 Syntax coloring for log messages can be helpful while eyeballing log files.
 For Vim:
