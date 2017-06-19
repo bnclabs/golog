@@ -166,8 +166,8 @@ Syntax coloring for log messages can be helpful while eyeballing log files.
 For Vim:
 
 ```text
-https://github.com/vim-scripts/httplog
-https://github.com/vim-scripts/apachelogs.vim
+github.com/vim-scripts/httplog
+github.com/vim-scripts/apachelogs.vim
 ```
 
 Note that, if log files are large, adding syntax highlights can
