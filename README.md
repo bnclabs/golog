@@ -11,6 +11,7 @@ Basic logging with batteries
 * Include/Exclude/Format log time.
 * Colorize log messages for different levels.
 * Console logging.
+* Stable APIs, existing APIs are not going to change.
 
 Packages can import log and use its methods
 
