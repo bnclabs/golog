@@ -134,6 +134,47 @@ color configuration is available for each and every log level.
 
 ---
 
+Tip: Filtering log messages
+===========================
+
+Every Unix server is bound to have ``grep`` and ``vim``. Add the following in
+your .vimrc file to prune out unnecessary log messages.
+
+```vim
+" Filter command for vim-buffers.
+command! -nargs=? Filter let @a='' | execute 'g/<args>/y A' | tabnew | setlocal bt=nofile | put! a
+" Filterx command for vim-buffers.
+command! -nargs=? Filterx let @a='' | execute 'v/<args>/y A' | tabnew | setlocal bt=nofile | put! a
+```
+
+Subsequently:
+
+```vim
+:Filter Error
+```
+
+Will create a new tab in vim, and list messages that contain ``Error``.
+``Filterx`` does the opposite, list messages that do not contain ``Error``.
+Can use vim's reg-ex pattern as Filter's argument.
+
+---
+
+Tip: syntax highlighting of log files
+=====================================
+
+Syntax coloring for log messages can be helpful while eyeballing log files.
+For Vim:
+
+```text
+https://github.com/vim-scripts/httplog
+https://github.com/vim-scripts/apachelogs.vim
+```
+
+Note that, if log files are large, adding syntax highlights can
+significantly slow down the editor's rendering.
+
+---
+
 Thank you
 =========
 
