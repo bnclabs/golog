@@ -3,7 +3,7 @@ Golog: Basic logging with batteries
 
 R Pratap Chakravarthy <br/>
 prataprc@gmail.com <br/>
-[https://github.com/prataprc/golog](https://github.com/prataprc/golog)
+[https://github.com/prataprc/golog](https://github.com/prataprc/golog) <br/>
 17, Jun 2017
 
 ---

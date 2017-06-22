@@ -158,8 +158,8 @@ How to contribute
 -----------------
 
 * Pick an issue, or create an new issue. Provide adequate documentation for
-the issue.
+  the issue.
 * Assign the issue or get it assigned.
 * Work on the code, once finished, raise a pull request.
 * Golog is written in [golang](https://golang.org/), hence expected to follow the
-global guidelines for writing go programs.
+  global guidelines for writing go programs.
