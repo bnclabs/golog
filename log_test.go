@@ -9,8 +9,6 @@ import stdlog "log"
 
 import "github.com/prataprc/color"
 
-var _ = fmt.Sprintf("dummy")
-
 func TestSetLogger(t *testing.T) {
 	logfile := "setlogger_test.log.file"
 	logline := "hello world"
