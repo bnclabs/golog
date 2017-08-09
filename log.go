@@ -270,7 +270,7 @@ func (l *defaultLogger) Tracef(format string, v ...interface{}) {
 }
 
 // Printlf for defaultLogger
-func (l *defaultLogger) Printlf(level LogLevel, format string, v ...interface{}) {
+func (l *defaultLogger) Printlf(level LogLevel, frmt string, v ...interface{}) {
 	if l.canlog(level) {
 		prefix := ""
 		if l.timeformat != "" {
@@ -281,10 +281,11 @@ func (l *defaultLogger) Printlf(level LogLevel, format string, v ...interface{})
 		}
 		newv := []interface{}{prefix}
 		newv = append(newv, v...)
+		frmt := trimformat(frmt) // output appends a newline because of color
 		if color, ok := l.colors[level]; ok && color != nil {
-			stdlog.Output(2, color.Sprintf("%v"+format, newv...))
+			stdlog.Output(2, color.Sprintf("%v"+frmt, newv...))
 		} else {
-			stdlog.Output(2, fmt.Sprintf("%v"+format, newv...))
+			stdlog.Output(2, fmt.Sprintf("%v"+frmt, newv...))
 		}
 	}
 }
@@ -469,4 +470,11 @@ func parsecsv(input string) []string {
 		outs = append(outs, s)
 	}
 	return outs
+}
+
+func trimformat(frmt string) string {
+	if frmt[len(frmt)-1] == '\n' {
+		return frmt[:len(frmt)-1]
+	}
+	return frmt
 }
