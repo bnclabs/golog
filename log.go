@@ -283,9 +283,9 @@ func (l *defaultLogger) Printlf(level LogLevel, frmt string, v ...interface{}) {
 		newv = append(newv, v...)
 		frmt := trimformat(frmt) // output appends a newline because of color
 		if color, ok := l.colors[level]; ok && color != nil {
-			stdlog.Output(2, color.Sprintf("%v"+frmt, newv...))
+			stdlog.Output(3, color.Sprintf("%v"+frmt, newv...))
 		} else {
-			stdlog.Output(2, fmt.Sprintf("%v"+frmt, newv...))
+			stdlog.Output(3, fmt.Sprintf("%v"+frmt, newv...))
 		}
 	}
 }
