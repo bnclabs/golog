@@ -131,7 +131,7 @@ Default color values are:
     }
 ```
 
-color configuration is available for each and every log level.
+Color configuration is available for each and every log level.
 
 ---
 

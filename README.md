@@ -136,19 +136,14 @@ Panic cases
 -----------
 
 * API ``SetLogger()``
-
-  * if ``log.file`` is not string.
-  * if creating or opening ``log.file`` fails.
-  * if ``log.level`` is not an allowed log string.
-  * if ``log.prefix`` is neither string, nor bool.
-
+  * If ``log.file`` is not string.
+  * If creating or opening ``log.file`` fails.
+  * If ``log.level`` is not an allowed log string.
+  * If ``log.prefix`` is neither string, nor bool.
 * API ``SetLogLevel()``
-
-  * if ``log.level`` is not an allowed log string.
-
+  * If ``log.level`` is not an allowed log string.
 * API ``SetLogprefix()``
-
-  * if ``log.prefix`` is neither string, nor bool.
+  * If ``log.prefix`` is neither string, nor bool.
 
 Typically all the above panic cases needs to be fixed during development, and
 should never occur during production. If panics become unavoidable please use
