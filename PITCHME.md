@@ -3,7 +3,7 @@ Golog: Basic logging with batteries
 
 R Pratap Chakravarthy <br/>
 prataprc@gmail.com <br/>
-[https://github.com/prataprc/golog](https://github.com/prataprc/golog) <br/>
+[https://github.com/bnclabs/golog](https://github.com/bnclabs/golog) <br/>
 17, Jun 2017
 
 ---
@@ -50,7 +50,7 @@ information with every message.
 These facilities are supported on top of what the log pkg already
 provides. I find them sufficient for my case, but if your situation
 demands additional feature raise an
-[issue](http://github.com/prataprc/golog/issues)
+[issue](http://github.com/bnclabs/golog/issues)
 
 ---
 
@@ -181,6 +181,6 @@ Thank you
 
 If golog sounds useful please check out the following links.
 
-[Project README](https://github.com/prataprc/golog). <br/>
-[Golog API doc](https://godoc.org/github.com/prataprc/golog). <br/>
-[Please contribute](https://github.com/prataprc/golog/issues). <br/>
+[Project README](https://github.com/bnclabs/golog). <br/>
+[Golog API doc](https://godoc.org/github.com/bnclabs/golog). <br/>
+[Please contribute](https://github.com/bnclabs/golog/issues). <br/>

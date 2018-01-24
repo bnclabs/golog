@@ -6,7 +6,7 @@ across the application and its libraries.
 To begin with, import the golog package and start using its exported
 functions like:
 
-	import "github.com/prataprc/golog"
+	import "github.com/bnclabs/golog"
 	...
 	log.Printf()
 	log.Fatalf()
