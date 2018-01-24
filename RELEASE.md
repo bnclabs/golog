@@ -22,6 +22,10 @@ Repository structure
   * External references.
   * How to contribute.
 * RELEASE.md checklist.
+* LICENSE under which this package is released on github.
+* AUTHORS list of contributing authors, copyright is collectively
+  held by authors.
+* PITCHME files, if any, for package presentation.
 
 Badges
 ------
