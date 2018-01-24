@@ -13,24 +13,25 @@ Basic logging with batteries
 * Console logging.
 * Stable APIs, existing APIs are not going to change.
 
-Packages can import log and use its methods
+How to use golog
+----------------
+
+Packages can import golog and use its methods
 
 ```go
-
-    import github.com/prataprc/golog
-
-    func myfunc() {
-        ..
-        log.Fatalf(...)
-        ..
-        log.Warnf(...)
-        ..
-        log.Debugf(...)
-    }
+import github.com/prataprc/golog
+func myfunc() {
+    ..
+    log.Fatalf(...)
+    ..
+    log.Warnf(...)
+    ..
+    log.Debugf(...)
+}
 ```
 
-Note here that *log* is not an object name, it resolves to the imported *log*
-package that has exported methods *Fatalf()* *Warnf()* etc ... For more
+Note here that *log* is not an object name, importing *golog* resolves to
+*log* package that has exported methods *Fatalf()* *Warnf()* etc ... For more
 information please read the go-documentation for *log* package.
 
 By default, importing the package will initialize the logger to
@@ -38,18 +39,16 @@ default-logger that shall log to standard output. To use custom logger
 use the following initializer function in your package or application:
 
 ```go
+import github.com/prataprc/golog
 
-    import github.com/prataprc/golog
-
-    var mylogger = newmylogger()
-
-    func init() {
-        setts := map[string]interface{}{
-            "log.level": "info",
-            "log.file":  "",
-        }
-        SetLogger(mylogger, setts)
+var mylogger = newmylogger()
+func init() {
+    setts := map[string]interface{}{
+        "log.level": "info",
+        "log.file":  "",
     }
+    SetLogger(mylogger, setts)
+}
 ```
 
 *mylogger* should implement the *log.Logger* interface{}.
@@ -74,37 +73,36 @@ Console Logging
 
 By default log APIs will worry about log-level, prefix format, time-format
 sometimes it become too much of clutter on the screen to communicate simple
-messages with user via console. In such cases use the ``Consolef`` API.
+messages with user via console. In such cases use the `Consolef` API.
 
 ```go
     log.Consolef("goledger version - goledger%v\n", api.LedgerVersion)
 ```
 
-``Consolef`` does not print the log time, log level and always outputs to
+`Consolef` does not print the log time, log level and always outputs to
 stdout.
 
 Settings
 --------
 
 * **log.level**, filter all messages logged at level greater than the
-configured value. Can be one of the following names -
-ignore, fatal, error, warn, info, verbose, debug, trace
+  configured value. Can be one of the following names -
+  ignore, fatal, error, warn, info, verbose, debug, trace
 * **log.flag**, comma separated value of log.Flags,
-eg: ``Ldate,Ltime,Llongfile``, described further down.
+  eg: `Ldate,Ltime,Llongfile`, described further down.
 * **log.file**, if not empty string, all log messages are appended to
-configured file.
+  configured file.
 * **log.timeformat**, format of time string prefixed to log message,
-should confirm to ``time.Now().Format()``.
-* **log.prefix**, ``fmt.Sprintf`` format string for log level, by
-default ``[<leve>]`` format is used.
+  should confirm to `time.Now().Format()`.
+* **log.prefix**, `fmt.Sprintf` format string for log level, by
+  default `[<leve>]` format is used.
 * **log.colorfatal**, comma separated value of attribute names -
-bold, underline, blinkslow, blinkrapid, crossedout, red, green,
-yellow, blue, magenta, cyan, white, hired, higreen, hiyellow, hiblue,
-himagenta, hicyan, hiwhite. Attribute-settings available for all log
-levels.
+  bold, underline, blinkslow, blinkrapid, crossedout, red, green,
+  yellow, blue, magenta, cyan, white, hired, higreen, hiyellow, hiblue,
+  himagenta, hicyan, hiwhite. Attribute-settings available for all log levels.
 
 **Ignore** ignore level can be used to ignore all log messages. Note that
-only log-level can be specified as ``ignore``, no corresponding API
+only log-level can be specified as `ignore`, no corresponding API
 is supported.
 
 **log.flags**
@@ -130,20 +128,20 @@ const (
 )
 ```
 
-Default **log.level** is ``Info``.
+Default **log.level** is `Info`.
 
-Panic cases
------------
+Panic and recovery
+------------------
 
-* API ``SetLogger()``
-  * If ``log.file`` is not string.
-  * If creating or opening ``log.file`` fails.
-  * If ``log.level`` is not an allowed log string.
-  * If ``log.prefix`` is neither string, nor bool.
-* API ``SetLogLevel()``
-  * If ``log.level`` is not an allowed log string.
-* API ``SetLogprefix()``
-  * If ``log.prefix`` is neither string, nor bool.
+* API `SetLogger()`
+  * If `log.file` is not string.
+  * If creating or opening `log.file` fails.
+  * If `log.level` is not an allowed log string.
+  * If `log.prefix` is neither string, nor bool.
+* API `SetLogLevel()`
+  * If `log.level` is not an allowed log string.
+* API `SetLogprefix()`
+  * If `log.prefix` is neither string, nor bool.
 
 Typically all the above panic cases needs to be fixed during development, and
 should never occur during production. If panics become unavoidable please use
@@ -158,3 +156,4 @@ How to contribute
 * Work on the code, once finished, raise a pull request.
 * Golog is written in [golang](https://golang.org/), hence expected to follow the
   global guidelines for writing go programs.
+* As of now, branch `master` is the development branch.
