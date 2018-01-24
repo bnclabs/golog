@@ -2,10 +2,10 @@ Basic logging with batteries
 ----------------------------
 
 [![talk on matrix](https://github.com/prataprc/dotfiles/blob/master/assets/talkonmatrix.svg)](https://riot.im/app/#/user/@prataprc:matrix.org?action=chat)
-[![Build Status](https://travis-ci.org/prataprc/golog.png)](https://travis-ci.org/prataprc/golog)
-[![Coverage Status](https://coveralls.io/repos/prataprc/golog/badge.png?branch=master&service=github)](https://coveralls.io/github/prataprc/golog?branch=master)
-[![GoDoc](https://godoc.org/github.com/prataprc/golog?status.png)](https://godoc.org/github.com/prataprc/golog)
-[![GitPitch](https://gitpitch.com/assets/badge.svg)](https://gitpitch.com/prataprc/golog/master?grs=github&t=white)
+[![Build Status](https://travis-ci.org/bnclabs/golog.png)](https://travis-ci.org/bnclabs/golog)
+[![Coverage Status](https://coveralls.io/repos/github/bnclabs/golog/badge.svg?branch=master)](https://coveralls.io/github/bnclabs/golog?branch=master)
+[![GoDoc](https://godoc.org/github.com/bnclabs/golog?status.png)](https://godoc.org/github.com/bnclabs/golog)
+[![GitPitch](https://gitpitch.com/assets/badge.svg)](https://gitpitch.com/bnclabs/golog/master?grs=github&t=white)
 
 * APIs to prefix log-level in log messages.
 * Global option to redirect logs to a file.
@@ -20,7 +20,7 @@ How to use golog
 Packages can import golog and use its methods
 
 ```go
-import github.com/prataprc/golog
+import github.com/bnclabs/golog
 func myfunc() {
     ..
     log.Fatalf(...)
@@ -40,7 +40,7 @@ default-logger that shall log to standard output. To use custom logger
 use the following initializer function in your package or application:
 
 ```go
-import github.com/prataprc/golog
+import github.com/bnclabs/golog
 
 var mylogger = newmylogger()
 func init() {
