@@ -1,7 +1,6 @@
 Basic logging with batteries
 ----------------------------
 
-[![IRC #go-nuts](https://www.irccloud.com/invite-svg?channel=%23go-nuts&amp;hostname=chat.freenode.net&amp;port=6697&amp;ssl=1)](https://www.irccloud.com/invite?channel=%23go-nuts&amp;hostname=chat.freenode.net&amp;port=6697&amp;ssl=1)
 [![Build Status](https://travis-ci.org/bnclabs/golog.png)](https://travis-ci.org/bnclabs/golog)
 [![Coverage Status](https://coveralls.io/repos/github/bnclabs/golog/badge.svg?branch=master)](https://coveralls.io/github/bnclabs/golog?branch=master)
 [![GoDoc](https://godoc.org/github.com/bnclabs/golog?status.png)](https://godoc.org/github.com/bnclabs/golog)
